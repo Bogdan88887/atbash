@@ -1,68 +1,64 @@
 #include <iostream>
 #include <string>
 
-std::string atbashEncrypt(const std::string& plaintext) {
-    std::string ciphertext;
-    for (char charac : plaintext) {
-        if (isalpha(charac)) {
-            if ('а' <= charac && charac <= 'я') { // Проверка на кириллицу (строчные)
-                ciphertext += 'я' - (charac - 'а');
-            } else if ('А' <= charac && charac <= 'Я') { // Проверка на кириллицу (заглавные)
-                ciphertext += 'Я' - (charac - 'А');
-            } else if ('a' <= charac && charac <= 'z') { // Проверка на латиницу (строчные)
-                ciphertext += 'z' - (charac - 'a');
-            } else if ('A' <= charac && charac <= 'Z') { // Проверка на латиницу (заглавные)
-                ciphertext += 'Z' - (charac - 'A');
-            }
-        } else {
-            ciphertext += charac;
-        }
+using namespace std;
+
+string atbash_encrypt(string plaintext) {
+  string ciphertext = "";
+  for (char& c : plaintext) {
+    if (c >= 'а' && c <= 'я') {
+      ciphertext += 'я' - (c - 'а');
+    } else if (c >= 'А' && c <= 'Я') {
+      ciphertext += 'Я' - (c - 'А');
+    } else if (c >= 'a' && c <= 'z') {
+      ciphertext += 'z' - (c - 'a');
+    } else if (c >= 'A' && c <= 'Z') {
+      ciphertext += 'Z' - (c - 'A');
+    } else {
+      ciphertext += c;
     }
-    return ciphertext;
+  }
+  return ciphertext;
 }
 
-std::string atbashDecrypt(const std::string& ciphertext) {
-    std::string plaintext;
-    for (char charac : ciphertext) {
-        if (isalpha(charac)) {
-            if ('а' <= charac && charac <= 'я') { // Проверка на кириллицу (строчные)
-                plaintext += 'я' - (charac - 'а');
-            } else if ('А' <= charac && charac <= 'Я') { // Проверка на кириллицу (заглавные)
-                plaintext += 'Я' - (charac - 'А');
-            } else if ('a' <= charac && charac <= 'z') { // Проверка на латиницу (строчные)
-                plaintext += 'z' - (charac - 'a');
-            } else if ('A' <= charac && charac <= 'Z') { // Проверка на латиницу (заглавные)
-                plaintext += 'Z' - (charac - 'A');
-            }
-        } else {
-            plaintext += charac;
-        }
+string atbash_decrypt(string ciphertext) {
+  string plaintext = "";
+  for (char& c : ciphertext) {
+    if (c >= 'а' && c <= 'я') {
+      plaintext += 'я' - (c - 'а');
+    } else if (c >= 'А' && c <= 'Я') {
+      plaintext += 'Я' - (c - 'А');
+    } else if (c >= 'a' && c <= 'z') {
+      plaintext += 'z' - (c - 'a');
+    } else if (c >= 'A' && c <= 'Z') {
+      plaintext += 'Z' - (c - 'A');
+    } else {
+      plaintext += c;
     }
-    return plaintext;
+  }
+  return plaintext;
 }
 
 int main() {
-    std::string choose1;
-    std::cout << "Выберите операцию (1 - шифрование, 2 - расшифрование): ";
-    std::cin >> choose1;
+  int operation;
+  string text;
 
-    if (choose1 == "1") {
-        std::string plaintext;
-        std::cout << "Введите текст для шифрования: ";
-        std::cin.ignore(); // Игнорируем символ новой строки после ввода числа
-        std::getline(std::cin, plaintext);
-        std::string ciphertext = atbashEncrypt(plaintext);
-        std::cout << "Зашифрованный текст: " << ciphertext << std::endl;
-    } else if (choose1 == "2") {
-        std::string ciphertext;
-        std::cout << "Введите текст для расшифровки: ";
-        std::cin.ignore(); // Игнорируем символ новой строки после ввода числа
-        std::getline(std::cin, ciphertext);
-        std::string plaintext = atbashDecrypt(ciphertext);
-        std::cout << "Расшифрованный текст: " << plaintext << std::endl;
-    } else {
-        std::cout << "Выбрана неверная операция!" << std::endl;
-    }
+  cout << "Выберите тип операции (1 - шифрование, 2 - расшифрование): ";
+  cin >> operation;
 
-    return 0;
+  cout << "Введите текст: ";
+  cin.ignore();  // Очистить буфер ввода
+  getline(cin, text);
+
+  if (operation == 1) {
+    string ciphertext = atbash_encrypt(text);
+    cout << "Результат: " << ciphertext << endl;
+  } else if (operation == 2) {
+    string plaintext = atbash_decrypt(text);
+    cout << "Результат: " << plaintext << endl;
+  } else {
+    cout << "Выбрана неверная операция!" << endl;
+  }
+
+  return 0;
 }
