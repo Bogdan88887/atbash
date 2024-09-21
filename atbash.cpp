@@ -1,64 +1,54 @@
 #include <iostream>
 #include <string>
+#include <locale>
+#include <codecvt>
 
-using namespace std;
-
-string atbash_encrypt(string plaintext) {
-  string ciphertext = "";
-  for (char& c : plaintext) {
-    if (c >= 'а' && c <= 'я') {
-      ciphertext += 'я' - (c - 'а');
-    } else if (c >= 'А' && c <= 'Я') {
-      ciphertext += 'Я' - (c - 'А');
-    } else if (c >= 'a' && c <= 'z') {
-      ciphertext += 'z' - (c - 'a');
-    } else if (c >= 'A' && c <= 'Z') {
-      ciphertext += 'Z' - (c - 'A');
-    } else {
-      ciphertext += c;
+std::wstring atbashEncryptDecrypt(const std::wstring& input) {
+    std::wstring output;
+    for (wchar_t ch : input) {
+        if (ch >= L'a' && ch <= L'z') {
+            output += L'z' - (ch - L'a');
+        } else if (ch >= L'A' && ch <= L'Z') {
+            output += L'Z' - (ch - L'A');
+        } else if (ch >= L'а' && ch <= L'я') {
+            output += L'я' - (ch - L'а');
+        } else if (ch >= L'А' && ch <= L'Я') {
+            output += L'Я' - (ch - L'А');
+        } else {
+            output += ch; // не изменяем символы, которые не в алфавите
+        }
     }
-  }
-  return ciphertext;
-}
-
-string atbash_decrypt(string ciphertext) {
-  string plaintext = "";
-  for (char& c : ciphertext) {
-    if (c >= 'а' && c <= 'я') {
-      plaintext += 'я' - (c - 'а');
-    } else if (c >= 'А' && c <= 'Я') {
-      plaintext += 'Я' - (c - 'А');
-    } else if (c >= 'a' && c <= 'z') {
-      plaintext += 'z' - (c - 'a');
-    } else if (c >= 'A' && c <= 'Z') {
-      plaintext += 'Z' - (c - 'A');
-    } else {
-      plaintext += c;
-    }
-  }
-  return plaintext;
+    return output;
 }
 
 int main() {
-  int operation;
-  string text;
+    setlocale(LC_ALL, ""); // Поддержка русского языка в консоли
 
-  cout << "Выберите тип операции (1 - шифрование, 2 - расшифрование): ";
-  cin >> operation;
+    int option;
+    std::wstring text;
 
-  cout << "Введите текст: ";
-  cin.ignore();  // Очистить буфер ввода
-  getline(cin, text);
+    while (true) {
+        std::wcout << L"Выберите опцию: 1 - Шифрование, 2 - Расшифровка, 0 - Выход\n";
+        std::wcin >> option;
+        std::wcin.ignore(); // Игнорируем символ новой строки после ввода числа
 
-  if (operation == 1) {
-    string ciphertext = atbash_encrypt(text);
-    cout << "Результат: " << ciphertext << endl;
-  } else if (operation == 2) {
-    string plaintext = atbash_decrypt(text);
-    cout << "Результат: " << plaintext << endl;
-  } else {
-    cout << "Выбрана неверная операция!" << endl;
-  }
+        if (option == 0) {
+            break;
+        }
 
-  return 0;
+        std::wcout << L"Введите текст: ";
+        std::getline(std::wcin, text);
+
+        if (option == 1) {
+            std::wstring encrypted = atbashEncryptDecrypt(text);
+            std::wcout << L"Зашифрованный текст: \"" << encrypted << L"\"\n";
+        } else if (option == 2) {
+            std::wstring decrypted = atbashEncryptDecrypt(text);
+            std::wcout << L"Расшифрованный текст: \"" << decrypted << L"\"\n";
+        } else {
+            std::wcout << L"Некорректный выбор, попробуйте еще раз.\n";
+        }
+    }
+
+    return 0;
 }
